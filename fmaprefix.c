@@ -6,6 +6,7 @@
 #include <sys/stat.h>
 #include <errno.h>
 #include <string.h>
+#include <strings.h>
 
 
 #define MAX_QUERY_LEN  2048
@@ -84,7 +85,7 @@ int main(int argc, char *argv[]) {
         size_t lineLen = getLineLen(ptr, len, lineStart);
         //printLine(ptr, lineStart, lineLen);
 
-        int v = strncmp(ptr + lineStart, q, MIN(qlen, lineLen));
+        int v = strncasecmp(ptr + lineStart, q, MIN(qlen, lineLen));
 
         if(v > 0) {
             right = mid - 1;
@@ -106,7 +107,7 @@ int main(int argc, char *argv[]) {
             off_t prevLineStart = findLineStart(ptr, found - 1);
             off_t prevLineLength = getLineLen(ptr, len, prevLineStart);
 
-            if(strncmp(ptr + prevLineStart, q, MIN(qlen, prevLineLength)) != 0) {
+            if(strncasecmp(ptr + prevLineStart, q, MIN(qlen, prevLineLength)) != 0) {
                 // prev line does not match; we found the first hit
                 break;
             } else {
@@ -118,7 +119,7 @@ int main(int argc, char *argv[]) {
 
             off_t lineLen = getLineLen(ptr, len, found);
 
-            if(strncmp(ptr + found, q, MIN(qlen, lineLen)) != 0) {
+            if(strncasecmp(ptr + found, q, MIN(qlen, lineLen)) != 0) {
                 break;
             }
 
