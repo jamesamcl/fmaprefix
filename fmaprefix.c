@@ -78,7 +78,7 @@ int main(int argc, char *argv[]) {
         off_t mid = ((right - left) / 2) + left;
         off_t lineStart = findLineStart(ptr, mid);
 
-        //printf("l %d; r %d; m %d; num %d\n", left, right, mid, right - left);
+        printf("l %d; r %d; m %d; num %d\n", left, right, mid, right - left);
 
         if(lineStart == -1) {
             break;
@@ -86,19 +86,19 @@ int main(int argc, char *argv[]) {
 
         size_t lineLen = getLineLen(ptr, len, lineStart);
 
-        //printf("@ ");
-        //printLine(ptr, lineStart, lineLen);
+        printf("@ ");
+        printLine(ptr, lineStart, lineLen);
 
         int v = strncasecmp(ptr + lineStart, q, MIN(qlen, lineLen));
 
-        //printf("v is %d\n", v);
+        printf("v is %d\n", v);
 
         if(v > 0) {
-            // we are greater than query; discard anything greater than us
-            right = lineStart;
+            // we are greater than query; discard us and anything greater than us
+            right = lineStart - 1;
         } else if(v < 0) {
-            // we are less than query; discard anything less than us
-            left = lineStart;
+            // we are less than query; discard us and anything less than us
+            left = lineStart + lineLen + 1;
         } else {
             // we match the query
             found = lineStart;
@@ -116,8 +116,8 @@ int main(int argc, char *argv[]) {
             off_t prevLineStart = findLineStart(ptr, found - 1);
             off_t prevLineLength = getLineLen(ptr, len, prevLineStart);
 
-            //printf("rewind ");
-            //printLine(ptr, prevLineStart, prevLineLength);
+            printf("rewind ");
+            printLine(ptr, prevLineStart, prevLineLength);
 
             if(strncasecmp(ptr + prevLineStart, q, MIN(qlen, prevLineLength)) != 0) {
                 // prev line does not match; we found the first hit
